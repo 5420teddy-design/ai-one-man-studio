@@ -9,14 +9,14 @@ type RadarChartCardProps = {
 
 export function RadarChartCard({ data }: RadarChartCardProps) {
   return (
-    <div className="h-80 rounded-[1.5rem] border border-slate-900/10 bg-white p-4 shadow-soft">
+    <div className="glass-card h-80 rounded-[1.5rem] p-4">
       <ResponsiveContainer width="100%" height="100%">
         <RadarChart data={data}>
-          <PolarGrid stroke="#d9dee8" />
-          <PolarAngleAxis dataKey="name" tick={{ fontSize: 12 }} />
-          <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 11 }} />
+          <PolarGrid stroke="rgba(148,163,184,0.24)" />
+          <PolarAngleAxis dataKey="name" tick={{ fontSize: 12, fill: "#94A3B8" }} />
+          <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 11, fill: "#94A3B8" }} />
           <Tooltip />
-          <Radar dataKey="value" stroke="#12233d" fill="#f3d9a4" fillOpacity={0.68} />
+          <Radar dataKey="value" stroke="#38BDF8" fill="#A855F7" fillOpacity={0.38} />
         </RadarChart>
       </ResponsiveContainer>
     </div>

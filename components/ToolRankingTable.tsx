@@ -19,14 +19,14 @@ export function ToolRankingTable({ tools }: ToolRankingTableProps) {
   }, [activeCategory, tools]);
 
   return (
-    <div className="rounded-[1.5rem] border border-slate-900/10 bg-paper p-4 shadow-soft md:p-6">
+    <div className="glass-card rounded-[1.5rem] p-4 md:p-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <p className="inline-flex items-center gap-2 text-sm font-semibold text-clay">
+          <p className="inline-flex items-center gap-2 text-sm font-semibold text-cyber-cyan">
             <SlidersHorizontal className="h-4 w-4" aria-hidden="true" />
             分類篩選
           </p>
-          <h2 className="mt-1 text-2xl font-bold text-ink">AI 工具排行榜</h2>
+          <h2 className="mt-1 font-display text-2xl font-bold text-cyber-title">AI 工具排行榜</h2>
         </div>
         <div className="flex flex-wrap gap-2">
           {categories.map((category) => (
@@ -35,7 +35,7 @@ export function ToolRankingTable({ tools }: ToolRankingTableProps) {
               type="button"
               onClick={() => setActiveCategory(category)}
               className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-                activeCategory === category ? "bg-ink text-white" : "bg-white text-muted hover:text-ink"
+                activeCategory === category ? "bg-cyber-cyan text-cyber-bg" : "bg-white/5 text-cyber-muted hover:text-cyber-title"
               }`}
             >
               {category}
@@ -45,7 +45,7 @@ export function ToolRankingTable({ tools }: ToolRankingTableProps) {
       </div>
       <div className="mt-6 overflow-x-auto">
         <table className="w-full min-w-[900px] border-separate border-spacing-y-3 text-left text-sm">
-          <thead className="text-xs uppercase tracking-wide text-muted">
+          <thead className="text-xs uppercase tracking-wide text-cyber-muted">
             <tr>
               <th className="px-4">工具</th>
               <th className="px-4">分類</th>
@@ -64,22 +64,22 @@ export function ToolRankingTable({ tools }: ToolRankingTableProps) {
           </thead>
           <tbody>
             {filteredTools.map((tool) => (
-              <tr key={tool.name} className="bg-white shadow-sm">
-                <td className="rounded-l-2xl px-4 py-4 font-bold text-ink">{tool.name}</td>
-                <td className="px-4 py-4 text-muted">{tool.category}</td>
-                <td className="max-w-xs px-4 py-4 text-muted">{tool.bestFor}</td>
-                <td className="px-4 py-4 text-muted">{tool.pricing}</td>
-                <td className="px-4 py-4 text-muted">{tool.difficulty}/5</td>
-                <td className="px-4 py-4 text-muted">{tool.businessValue}</td>
+              <tr key={tool.name} className="bg-white/[0.04] shadow-sm">
+                <td className="rounded-l-2xl px-4 py-4 font-bold text-cyber-title">{tool.name}</td>
+                <td className="px-4 py-4 text-cyber-muted">{tool.category}</td>
+                <td className="max-w-xs px-4 py-4 text-cyber-muted">{tool.bestFor}</td>
+                <td className="px-4 py-4 text-cyber-muted">{tool.pricing}</td>
+                <td className="px-4 py-4 text-cyber-muted">{tool.difficulty}/5</td>
+                <td className="px-4 py-4 text-cyber-muted">{tool.businessValue}</td>
                 <td className="px-4 py-4">
-                  <span className="rounded-full bg-wheat px-3 py-1 font-bold text-ink">{tool.score}</span>
+                  <span className="rounded-full bg-cyber-cyan/10 px-3 py-1 font-bold text-cyber-cyan">{tool.score}</span>
                 </td>
                 <td className="rounded-r-2xl px-4 py-4">
                   <a
                     href={tool.affiliateUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-1 font-semibold text-clay hover:text-ink"
+                    className="inline-flex items-center gap-1 font-semibold text-cyber-cyan hover:text-white"
                   >
                     官方網站
                     <ExternalLink className="h-4 w-4" aria-hidden="true" />

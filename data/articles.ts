@@ -26,6 +26,12 @@ export type Article = {
   monetizationAngle: string;
   publishDate: string;
   readingTime: number;
+  coverImage: string;
+  author: string;
+  shares: number;
+  featured: boolean;
+  hotRank?: number;
+  tags: string[];
   faq: {
     question: string;
     answer: string;
@@ -261,6 +267,12 @@ function buildArticles(): Article[] {
         monetizationAngle: buildMonetizationAngle(category as CategoryName, topic),
         publishDate: `2026-${String(Math.floor((articleIndex - 1) / 28) + 1).padStart(2, "0")}-${String(((articleIndex - 1) % 28) + 1).padStart(2, "0")}`,
         readingTime: 5 + (articleIndex % 7),
+        coverImage: "/images/ai-cover-default.svg",
+        author: "AI 一人公司研究所",
+        shares: 120 + ((articleIndex * 37) % 980),
+        featured: articleIndex <= 6 || articleIndex % 17 === 0,
+        hotRank: articleIndex <= 5 ? articleIndex : undefined,
+        tags: [category, topic.keyword, "AI 一人公司"].filter(Boolean) as string[],
         faq: buildFaq(topic)
       };
     })

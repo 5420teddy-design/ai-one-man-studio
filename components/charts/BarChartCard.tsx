@@ -9,14 +9,14 @@ type BarChartCardProps = {
 
 export function BarChartCard({ data }: BarChartCardProps) {
   return (
-    <div className="h-80 rounded-[1.5rem] border border-slate-900/10 bg-white p-4 shadow-soft">
+    <div className="glass-card h-80 rounded-[1.5rem] p-4">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-          <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-          <YAxis domain={[0, 100]} tick={{ fontSize: 12 }} />
+          <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.18)" />
+          <XAxis dataKey="name" tick={{ fontSize: 12, fill: "#94A3B8" }} />
+          <YAxis domain={[0, 100]} tick={{ fontSize: 12, fill: "#94A3B8" }} />
           <Tooltip />
-          <Bar dataKey="score" fill="#d98b5f" radius={[8, 8, 0, 0]} />
+          <Bar dataKey="score" fill="#22D3EE" radius={[8, 8, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

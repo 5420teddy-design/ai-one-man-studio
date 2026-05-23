@@ -1,0 +1,35 @@
+<svg width="1280" height="720" viewBox="0 0 1280 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="720" fill="#070B14"/>
+  <rect width="1280" height="720" fill="url(#grid)" opacity="0.45"/>
+  <circle cx="290" cy="170" r="260" fill="#38BDF8" opacity="0.18"/>
+  <circle cx="980" cy="520" r="320" fill="#A855F7" opacity="0.2"/>
+  <circle cx="770" cy="230" r="210" fill="#22D3EE" opacity="0.11"/>
+  <path d="M190 438C312 318 429 286 548 342C678 403 795 391 914 292C995 225 1073 202 1148 223" stroke="url(#line)" stroke-width="4" stroke-linecap="round"/>
+  <path d="M172 280C275 240 372 252 464 317C577 397 690 410 803 355C923 296 1025 318 1138 401" stroke="url(#line2)" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+  <g opacity="0.9">
+    <circle cx="190" cy="438" r="9" fill="#38BDF8"/>
+    <circle cx="548" cy="342" r="12" fill="#22D3EE"/>
+    <circle cx="914" cy="292" r="10" fill="#A855F7"/>
+    <circle cx="1148" cy="223" r="8" fill="#38BDF8"/>
+    <circle cx="464" cy="317" r="8" fill="#22D3EE"/>
+    <circle cx="803" cy="355" r="8" fill="#A855F7"/>
+  </g>
+  <rect x="88" y="92" width="520" height="86" rx="22" fill="#0F172A" fill-opacity="0.82" stroke="#38BDF8" stroke-opacity="0.28"/>
+  <text x="116" y="146" fill="#F8FAFC" font-family="Inter, Arial, sans-serif" font-size="38" font-weight="800" letter-spacing="2">AI ONE COMPANY</text>
+  <text x="96" y="610" fill="#94A3B8" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="600" letter-spacing="4">AI SEO · AUTOMATION · SOLO BUSINESS</text>
+  <defs>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M 48 0 L 0 0 0 48" fill="none" stroke="#94A3B8" stroke-opacity="0.16" stroke-width="1"/>
+    </pattern>
+    <linearGradient id="line" x1="190" y1="438" x2="1148" y2="223" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#38BDF8"/>
+      <stop offset="0.52" stop-color="#22D3EE"/>
+      <stop offset="1" stop-color="#A855F7"/>
+    </linearGradient>
+    <linearGradient id="line2" x1="172" y1="280" x2="1138" y2="401" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A855F7"/>
+      <stop offset="0.5" stop-color="#38BDF8"/>
+      <stop offset="1" stop-color="#22D3EE"/>
+    </linearGradient>
+  </defs>
+</svg>

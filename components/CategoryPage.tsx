@@ -16,9 +16,9 @@ export function CategoryPage({ category, eyebrow, title, description }: Category
   return (
     <main>
       <section className="mx-auto max-w-7xl px-5 py-14 md:py-20">
-        <p className="text-sm font-bold text-clay">{eyebrow}</p>
-        <h1 className="mt-3 max-w-3xl text-4xl font-bold tracking-normal text-ink md:text-5xl">{title}</h1>
-        <p className="mt-5 max-w-3xl text-lg leading-8 text-muted">{description}</p>
+        <p className="font-display text-xs font-bold uppercase tracking-[0.22em] text-cyber-cyan">{eyebrow}</p>
+        <h1 className="mt-3 max-w-3xl font-display text-4xl font-bold tracking-tight text-cyber-title md:text-5xl">{title}</h1>
+        <p className="mt-5 max-w-3xl text-lg leading-8 text-cyber-muted">{description}</p>
       </section>
       <section className="mx-auto max-w-7xl px-5 pb-16">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
