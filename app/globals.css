@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color: #12233d;
+  background: #fbf5ea;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at top left, rgba(243, 217, 164, 0.28), transparent 32rem),
+    linear-gradient(180deg, #fbf5ea 0%, #fffdf8 44%, #f7f4ee 100%);
+  color: #12233d;
+  font-family:
+    Arial,
+    "Noto Sans TC",
+    "Microsoft JhengHei",
+    sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::selection {
+  background: #f3d9a4;
+  color: #12233d;
+}
