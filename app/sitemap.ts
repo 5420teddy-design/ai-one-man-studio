@@ -1,11 +1,12 @@
 import type { MetadataRoute } from "next";
-import { articles } from "@/data/articles";
 import { categories } from "@/data/categories";
+import { getAllArticles } from "@/lib/all-articles";
 import { siteConfig } from "@/lib/seo";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const staticPaths = ["/", "/articles", "/about", "/contact", ...categories.map((category) => category.path)];
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const staticPaths = ["/", "/articles", "/dashboard", "/about", "/contact", ...categories.map((category) => category.path)];
   const now = new Date();
+  const articles = await getAllArticles();
 
   return [
     ...staticPaths.map((path) => ({

@@ -1,7 +1,7 @@
 import { ArticleCard } from "@/components/ArticleCard";
 import { CTASection } from "@/components/CTASection";
-import { articles } from "@/data/articles";
 import { categories } from "@/data/categories";
+import { getAllArticles } from "@/lib/all-articles";
 import { createMetadata } from "@/lib/seo";
 
 export const metadata = createMetadata({
@@ -10,20 +10,26 @@ export const metadata = createMetadata({
   path: "/articles"
 });
 
-export default function ArticlesPage() {
+export default async function ArticlesPage() {
+  const articles = await getAllArticles();
+
   return (
     <main>
       <section className="mx-auto max-w-7xl px-5 py-14 md:py-20">
         <p className="text-sm font-bold text-clay">文章列表</p>
         <h1 className="mt-3 max-w-3xl text-4xl font-bold tracking-normal text-ink md:text-5xl">
-          100 篇 AI 一人公司 SEO 文章
+          AI 一人公司 SEO 文章庫
         </h1>
         <p className="mt-5 max-w-3xl text-lg leading-8 text-muted">
           從工具比較、LINE Bot、自動化接案、AI SEO 到商業變現，整理成可搜尋、可行動的內容資料庫。
         </p>
         <div className="mt-8 flex flex-wrap gap-2">
           {categories.map((category) => (
-            <a key={category.name} href={`#${category.slug}`} className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-muted shadow-sm hover:text-ink">
+            <a
+              key={category.name}
+              href={`#${category.slug}`}
+              className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-muted shadow-sm hover:text-ink"
+            >
               {category.name}
             </a>
           ))}
@@ -43,7 +49,7 @@ export default function ArticlesPage() {
               </div>
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {categoryArticles.map((article) => (
-                  <ArticleCard key={article.id} article={article} />
+                  <ArticleCard key={article.slug} article={article} />
                 ))}
               </div>
             </div>

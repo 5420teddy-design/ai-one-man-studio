@@ -1,0 +1,409 @@
+{
+  "name": "AI SEO 自動內容工廠 - AI 一人公司研究所",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * *"
+            }
+          ]
+        }
+      },
+      "id": "daily-9am",
+      "name": "每天早上 9 點",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -900,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.SITE_URL}}/api/keywords",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "topic",
+              "value": "AI工具, AI自動化, AI接案, AI SEO, AI商業變現"
+            },
+            {
+              "name": "limit",
+              "value": "5"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "generate-keywords",
+      "name": "產生 5 個關鍵詞",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -680,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "keywords",
+        "options": {}
+      },
+      "id": "split-keywords",
+      "name": "逐一處理關鍵詞",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -460,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.SITE_URL}}/api/generate-article",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "keyword",
+              "value": "={{$json.keyword}}"
+            },
+            {
+              "name": "category",
+              "value": "={{$json.category}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "generate-article",
+      "name": "生成 SEO 文章",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.SITE_URL}}/api/generate-image",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "title",
+              "value": "={{$json.article.title}}"
+            },
+            {
+              "name": "category",
+              "value": "={{$json.article.category}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "generate-image",
+      "name": "生成圖片 Prompt",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        20,
+        -120
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.SITE_URL}}/api/generate-chart",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "keyword",
+              "value": "={{$json.article.targetKeyword}}"
+            },
+            {
+              "name": "category",
+              "value": "={{$json.article.category}}"
+            },
+            {
+              "name": "chartType",
+              "value": "={{$json.article.chartType}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "generate-chart",
+      "name": "生成圖表資料",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        20,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "id": "merge-assets",
+      "name": "合併文章圖片圖表",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        260,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.SITE_URL}}/api/publish-article",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-content-factory-key",
+              "value": "={{$env.CONTENT_FACTORY_API_KEY}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "article",
+              "value": "={{$node[\"生成 SEO 文章\"].json.article}}"
+            },
+            {
+              "name": "imagePrompts",
+              "value": "={{$node[\"生成圖片 Prompt\"].json.prompts}}"
+            },
+            {
+              "name": "chart",
+              "value": "={{$node[\"生成圖表資料\"].json}}"
+            },
+            {
+              "name": "commit",
+              "value": "true"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "publish-article",
+      "name": "發布文章並 Git Push",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        500,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.FACEBOOK_WEBHOOK_URL}}",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "message",
+              "value": "={{'新文章：' + $json.article.title + '\\n' + $env.SITE_URL + '/articles/' + $json.article.slug}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "post-facebook",
+      "name": "發 Facebook",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        740,
+        -160
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.THREADS_WEBHOOK_URL}}",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": "={{'今天的新文章：' + $json.article.title + '\\n' + $env.SITE_URL + '/articles/' + $json.article.slug}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "post-threads",
+      "name": "發 Threads",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        740,
+        0
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.LINE_OA_PUSH_ENDPOINT}}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{'Bearer ' + $env.LINE_OA_CHANNEL_ACCESS_TOKEN}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "message",
+              "value": "={{'新文章上線：' + $json.article.title + '\\n' + $env.SITE_URL + '/articles/' + $json.article.slug}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "push-line",
+      "name": "推播 LINE OA",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        740,
+        160
+      ],
+      "disabled": true
+    }
+  ],
+  "connections": {
+    "每天早上 9 點": {
+      "main": [
+        [
+          {
+            "node": "產生 5 個關鍵詞",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "產生 5 個關鍵詞": {
+      "main": [
+        [
+          {
+            "node": "逐一處理關鍵詞",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "逐一處理關鍵詞": {
+      "main": [
+        [
+          {
+            "node": "生成 SEO 文章",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "生成 SEO 文章": {
+      "main": [
+        [
+          {
+            "node": "生成圖片 Prompt",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "生成圖表資料",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "生成圖片 Prompt": {
+      "main": [
+        [
+          {
+            "node": "合併文章圖片圖表",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "生成圖表資料": {
+      "main": [
+        [
+          {
+            "node": "合併文章圖片圖表",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "合併文章圖片圖表": {
+      "main": [
+        [
+          {
+            "node": "發布文章並 Git Push",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "發布文章並 Git Push": {
+      "main": [
+        [
+          {
+            "node": "發 Facebook",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "發 Threads",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "推播 LINE OA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "timezone": "Asia/Taipei",
+    "executionOrder": "v1"
+  }
+}

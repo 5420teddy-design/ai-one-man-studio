@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import { ArticleChart } from "@/components/ArticleChart";
 import { CTASection } from "@/components/CTASection";
-import { articles, getArticleBySlug } from "@/data/articles";
+import { JsonLd } from "@/lib/article-schema";
+import { getAllArticles, getAnyArticleBySlug, isGeneratedArticle } from "@/lib/all-articles";
 import { createMetadata } from "@/lib/seo";
 import { categoryLabelToPath, formatDate } from "@/lib/utils";
 
@@ -11,14 +12,16 @@ type ArticlePageProps = {
   };
 };
 
-export function generateStaticParams() {
-  return articles.map((article) => ({
+export async function generateStaticParams() {
+  const allArticles = await getAllArticles();
+
+  return allArticles.map((article) => ({
     slug: article.slug
   }));
 }
 
-export function generateMetadata({ params }: ArticlePageProps) {
-  const article = getArticleBySlug(params.slug);
+export async function generateMetadata({ params }: ArticlePageProps) {
+  const article = await getAnyArticleBySlug(params.slug);
 
   if (!article) {
     return createMetadata({ title: "文章不存在", path: `/articles/${params.slug}` });
@@ -31,8 +34,38 @@ export function generateMetadata({ params }: ArticlePageProps) {
   });
 }
 
-export default function ArticlePage({ params }: ArticlePageProps) {
-  const article = getArticleBySlug(params.slug);
+function renderGeneratedContent(content: string) {
+  return content
+    .split(/\n{2,}/)
+    .map((block) => block.trim())
+    .filter(Boolean)
+    .map((block) => {
+      if (block.startsWith("## ")) {
+        return (
+          <h2 key={block} className="pt-4 text-2xl font-bold text-ink">
+            {block.replace(/^## /, "")}
+          </h2>
+        );
+      }
+
+      if (block.startsWith("### ")) {
+        return (
+          <h3 key={block} className="pt-2 text-xl font-bold text-ink">
+            {block.replace(/^### /, "")}
+          </h3>
+        );
+      }
+
+      return (
+        <p key={block} className="leading-8 text-muted">
+          {block}
+        </p>
+      );
+    });
+}
+
+export default async function ArticlePage({ params }: ArticlePageProps) {
+  const article = await getAnyArticleBySlug(params.slug);
 
   if (!article) {
     notFound();
@@ -40,6 +73,7 @@ export default function ArticlePage({ params }: ArticlePageProps) {
 
   return (
     <main>
+      <JsonLd article={article} />
       <article className="mx-auto max-w-4xl px-5 py-14 md:py-20">
         <a href={categoryLabelToPath(article.category)} className="rounded-full bg-white px-4 py-2 text-sm font-bold text-clay shadow-sm">
           {article.category}
@@ -73,12 +107,14 @@ export default function ArticlePage({ params }: ArticlePageProps) {
 
         <section className="mt-10">
           <h2 className="text-2xl font-bold text-ink">重點內容</h2>
-          <div className="mt-5 space-y-5 leading-8 text-muted">
-            {article.outline.slice(0, 4).map((item) => (
-              <p key={item}>
-                {item}。建議先從目前最頻繁、最耗時、最容易量化的工作開始，例如回覆詢問、整理資料、產出內容或製作報表。當流程能穩定重複，就能把它變成服務、模板或內部 SOP。
-              </p>
-            ))}
+          <div className="mt-5 space-y-5">
+            {isGeneratedArticle(article)
+              ? renderGeneratedContent(article.content)
+              : article.outline.slice(0, 4).map((item) => (
+                  <p key={item} className="leading-8 text-muted">
+                    {item}。建議先從目前最頻繁、最耗時、最容易量化的工作開始，例如回覆詢問、整理資料、產出內容或製作報表。當流程能穩定重複，就能把它變成服務、模板或內部 SOP。
+                  </p>
+                ))}
           </div>
         </section>
 

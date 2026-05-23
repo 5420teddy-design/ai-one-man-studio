@@ -45,6 +45,78 @@ git push -u origin main
 ## 內容維護
 
 - 文章資料：`data/articles.ts`
+- 自動生成文章：`data/articles/*.json` 與 `data/articles/*.mdx`
 - 工具資料：`data/tools.ts`
 - 分類資料：`data/categories.ts`
 - SEO 共用設定：`lib/seo.ts`
+
+## AI SEO 自動內容工廠
+
+### 環境變數
+
+先複製 `.env.example`，並在 Zeabur 設定相同環境變數：
+
+```bash
+cp .env.example .env.local
+```
+
+必要設定：
+
+- `NEXT_PUBLIC_SITE_URL`：正式網站網址
+- `OPENAI_API_KEY`：OpenAI API Key
+- `OPENAI_MODEL`：預設 `gpt-4o-mini`
+- `CONTENT_FACTORY_API_KEY`：n8n 呼叫發布 API 的保護金鑰
+
+Claude API 已預留：
+
+- `ANTHROPIC_API_KEY`
+- `CLAUDE_MODEL`
+
+### API Routes
+
+- `POST /api/keywords`
+  - 輸入：`{ "topic": "AI自動化", "limit": 50 }`
+  - 輸出：50 個長尾 SEO 關鍵詞、搜尋意圖、難度、商業價值、分類
+- `POST /api/generate-article`
+  - 輸入：`{ "keyword": "LINE AI 客服怎麼做", "category": "AI自動化" }`
+  - 輸出：SEO 文章 JSON，包含 title、slug、meta、H1、H2、FAQ、schema、CTA、content
+- `POST /api/humanize`
+  - 輸入：`{ "title": "...", "content": "..." }`
+  - 輸出：去 AI 味後的內容
+- `POST /api/generate-chart`
+  - 輸入：`{ "keyword": "...", "chartType": "matrix" }`
+  - 輸出：Recharts 可用的 chartData JSON
+- `POST /api/generate-image`
+  - 輸入：`{ "title": "..." }`
+  - 輸出：封面圖、Midjourney、Ideogram prompt
+- `POST /api/publish-article`
+  - Header：`x-content-factory-key: CONTENT_FACTORY_API_KEY`
+  - 功能：寫入 `data/articles/*.json`、`data/articles/*.mdx`，並執行 git add、commit、push
+
+### n8n Workflow
+
+workflow 檔案：
+
+```text
+workflows/n8n-ai-seo-content-factory.json
+```
+
+流程預設每天早上 9 點執行：
+
+1. 產生 5 個關鍵詞
+2. 生成 SEO 文章
+3. 生成圖片 Prompt
+4. 生成圖表資料
+5. 發布文章並 Git Push
+6. 由 GitHub 觸發 Zeabur 自動部署
+7. Facebook、Threads、LINE OA 節點已預留，預設停用，填入 webhook 後可啟用
+
+### Dashboard
+
+內容工廠狀態頁：
+
+```text
+/dashboard
+```
+
+可查看已生成文章、API 設定狀態、sitemap、GitHub Push 與 Zeabur 部署狀態。
