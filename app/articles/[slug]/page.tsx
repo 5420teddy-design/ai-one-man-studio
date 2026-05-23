@@ -3,6 +3,10 @@ import { ArticleChart } from "@/components/ArticleChart";
 import { ArticleHero } from "@/components/ArticleHero";
 import { NewsletterCTA } from "@/components/NewsletterCTA";
 import { ProseContent } from "@/components/ProseContent";
+import { SidebarAds } from "@/components/SidebarAds";
+import { SponsoredCard } from "@/components/SponsoredCard";
+import { ToolAffiliateCard } from "@/components/ToolAffiliateCard";
+import { tools } from "@/data/tools";
 import { JsonLd } from "@/lib/article-schema";
 import { getAllArticles, getAnyArticleBySlug, isGeneratedArticle } from "@/lib/all-articles";
 import { createMetadata } from "@/lib/seo";
@@ -75,7 +79,13 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             <p className="rounded-3xl border border-cyber-cyan/20 bg-cyber-cyan/10 p-6 text-cyber-text">
               {article.description}
             </p>
+          </ProseContent>
 
+          <div className="mx-auto my-10 max-w-[760px]">
+            <SponsoredCard />
+          </div>
+
+          <ProseContent>
             <h2>搜尋意圖</h2>
             <p>{article.searchIntent}</p>
 
@@ -101,7 +111,15 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                     {item}。建議先從目前最頻繁、最耗時、最容易量化的工作開始，例如回覆詢問、整理資料、產出內容或製作報表。當流程能穩定重複，就能把它變成服務、模板或內部 SOP。
                   </p>
                 ))}
+          </ProseContent>
 
+          <div className="mx-auto my-10 grid max-w-[760px] gap-5 md:grid-cols-2">
+            {tools.slice(0, 2).map((tool) => (
+              <ToolAffiliateCard key={tool.name} tool={tool} />
+            ))}
+          </div>
+
+          <ProseContent>
             <h2>數據圖表</h2>
             <p>以下用簡化分數觀察這個主題的落地難度、變現速度與長期價值，適合做為優先順序判斷。</p>
           </ProseContent>
@@ -129,7 +147,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         </div>
 
         <aside className="space-y-6 lg:sticky lg:top-28 lg:self-start">
-          <NewsletterCTA />
+          <SidebarAds tools={tools} />
           <div className="glass-card rounded-3xl p-6">
             <p className="font-display text-sm font-bold uppercase tracking-[0.18em] text-cyber-cyan">Tags</p>
             <div className="mt-4 flex flex-wrap gap-2">
@@ -141,6 +159,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             </div>
           </div>
         </aside>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-5 pb-20">
+        <NewsletterCTA />
       </section>
     </main>
   );

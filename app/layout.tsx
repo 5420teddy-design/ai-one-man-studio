@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Noto_Sans_TC } from "next/font/google";
 import { Footer } from "@/components/Footer";
+import { FloatingCTA } from "@/components/FloatingCTA";
 import { Header } from "@/components/Header";
 import { createMetadata } from "@/lib/seo";
 import "./globals.css";
@@ -30,6 +31,7 @@ export default function RootLayout({
       <body className="font-sans">
         <Header />
         {children}
+        <FloatingCTA />
         <Footer />
       </body>
     </html>

@@ -3,8 +3,10 @@ import { HeroTech } from "@/components/HeroTech";
 import { HotRanking } from "@/components/HotRanking";
 import { LatestArticleGrid } from "@/components/LatestArticleGrid";
 import { NewsletterCTA } from "@/components/NewsletterCTA";
+import { SponsorBanner } from "@/components/SponsorBanner";
 import { TechCategoryCard } from "@/components/TechCategoryCard";
 import { categories } from "@/data/categories";
+import { tools } from "@/data/tools";
 import { getAllArticles } from "@/lib/all-articles";
 import { createMetadata } from "@/lib/seo";
 
@@ -19,6 +21,7 @@ export default async function HomePage() {
   return (
     <main>
       <HeroTech />
+      <SponsorBanner tools={tools.slice(0, 3)} />
       <LatestArticleGrid articles={latestArticles.slice(0, 4)} />
       <FeaturedGrid articles={featuredArticles.length >= 5 ? featuredArticles : latestArticles.slice(0, 5)} />
       <HotRanking articles={hotArticles} />
