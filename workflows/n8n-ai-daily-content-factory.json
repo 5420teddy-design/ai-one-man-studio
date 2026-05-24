@@ -1,0 +1,297 @@
+{
+  "name": "AI 一人公司研究所 - Daily AI SEO Content Factory",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "30 5 * * *"
+            }
+          ]
+        }
+      },
+      "id": "0530-trigger",
+      "name": "05:30 搜尋熱門 AI 話題",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [-980, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.SITE_URL}}/api/trending-topics",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "limit",
+              "value": "5"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "trending-topics",
+      "name": "分析關鍵詞並挑選 5 題",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-760, 0]
+    },
+    {
+      "parameters": {
+        "amount": 10,
+        "unit": "minutes"
+      },
+      "id": "wait-0540",
+      "name": "等待到 05:40",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [-540, 0]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "topics",
+        "options": {}
+      },
+      "id": "split-topics",
+      "name": "逐一處理 5 個主題",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [-320, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.SITE_URL}}/api/generate-daily-article",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "topic",
+              "value": "={{$json}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "generate-article",
+      "name": "生成文章 / FAQ / Metadata",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-80, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.SITE_URL}}/api/generate-article-assets",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "topic",
+              "value": "={{$node[\"逐一處理 5 個主題\"].json}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "generate-assets",
+      "name": "生成圖表與圖片 Prompt",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [160, 0]
+    },
+    {
+      "parameters": {
+        "amount": 10,
+        "unit": "minutes"
+      },
+      "id": "wait-0550",
+      "name": "等待到 05:50",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [380, 0]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "id": "collect-articles",
+      "name": "收集 5 篇文章",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [600, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.SITE_URL}}/api/publish-daily-articles",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-content-factory-key",
+              "value": "={{$env.CONTENT_FACTORY_API_KEY}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "topics",
+              "value": "={{$node[\"分析關鍵詞並挑選 5 題\"].json.topics}}"
+            },
+            {
+              "name": "limit",
+              "value": "5"
+            },
+            {
+              "name": "commit",
+              "value": "true"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "publish",
+      "name": "05:50 存 MDX / GitHub Push / Zeabur 部署",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [840, 0]
+    },
+    {
+      "parameters": {
+        "amount": 20,
+        "unit": "minutes"
+      },
+      "id": "wait-0610",
+      "name": "等待到 06:10",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [1060, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.FACEBOOK_WEBHOOK_URL}}",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "message",
+              "value": "={{'今日 AI 新文章已上線：' + $json.articles.map(a => a.title).join(' / ')}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "facebook",
+      "name": "06:10 發 Facebook",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1300, -160],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.THREADS_WEBHOOK_URL}}",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": "={{'今日 5 篇 AI 趨勢文章：' + $json.articles.map(a => a.title).join(' / ')}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "threads",
+      "name": "06:10 發 Threads",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1300, 0],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.LINE_OA_PUSH_ENDPOINT}}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{'Bearer ' + $env.LINE_OA_CHANNEL_ACCESS_TOKEN}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "message",
+              "value": "={{'今日 AI 一人公司研究所新文章：' + $json.articles.map(a => $env.SITE_URL + a.url).join('\\n')}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "line",
+      "name": "06:10 推播 LINE OA",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1300, 160],
+      "disabled": true
+    }
+  ],
+  "connections": {
+    "05:30 搜尋熱門 AI 話題": {
+      "main": [[{ "node": "分析關鍵詞並挑選 5 題", "type": "main", "index": 0 }]]
+    },
+    "分析關鍵詞並挑選 5 題": {
+      "main": [[{ "node": "等待到 05:40", "type": "main", "index": 0 }]]
+    },
+    "等待到 05:40": {
+      "main": [[{ "node": "逐一處理 5 個主題", "type": "main", "index": 0 }]]
+    },
+    "逐一處理 5 個主題": {
+      "main": [[{ "node": "生成文章 / FAQ / Metadata", "type": "main", "index": 0 }]]
+    },
+    "生成文章 / FAQ / Metadata": {
+      "main": [[{ "node": "生成圖表與圖片 Prompt", "type": "main", "index": 0 }]]
+    },
+    "生成圖表與圖片 Prompt": {
+      "main": [[{ "node": "等待到 05:50", "type": "main", "index": 0 }]]
+    },
+    "等待到 05:50": {
+      "main": [[{ "node": "收集 5 篇文章", "type": "main", "index": 0 }]]
+    },
+    "收集 5 篇文章": {
+      "main": [[{ "node": "05:50 存 MDX / GitHub Push / Zeabur 部署", "type": "main", "index": 0 }]]
+    },
+    "05:50 存 MDX / GitHub Push / Zeabur 部署": {
+      "main": [[{ "node": "等待到 06:10", "type": "main", "index": 0 }]]
+    },
+    "等待到 06:10": {
+      "main": [
+        [
+          { "node": "06:10 發 Facebook", "type": "main", "index": 0 },
+          { "node": "06:10 發 Threads", "type": "main", "index": 0 },
+          { "node": "06:10 推播 LINE OA", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "timezone": "Asia/Taipei",
+    "executionOrder": "v1"
+  }
+}

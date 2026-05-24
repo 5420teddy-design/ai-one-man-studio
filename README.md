@@ -99,6 +99,7 @@ workflow 檔案：
 
 ```text
 workflows/n8n-ai-seo-content-factory.json
+workflows/n8n-ai-daily-content-factory.json
 ```
 
 流程預設每天早上 9 點執行：
@@ -120,3 +121,45 @@ workflows/n8n-ai-seo-content-factory.json
 ```
 
 可查看已生成文章、API 設定狀態、sitemap、GitHub Push 與 Zeabur 部署狀態。
+
+## Daily AI SEO Content Factory
+
+新增每日全自動內容工廠 API：
+
+- `GET /api/trending-topics`
+  - 取得今日 5 個 AI 熱門主題。
+  - 有 `PERPLEXITY_API_KEY` 與 `TAVILY_API_KEY` 時會先搜尋趨勢資料，再用 OpenAI 做總編輯評分。
+  - 未設定搜尋 API 時會回傳 fallback 主題，方便本地測試與 build。
+- `POST /api/generate-daily-article`
+  - 輸入：`{ "topic": { ...trendingTopic } }`
+  - 輸出：2500-4000 字 SEO 文章 JSON，含 metadata、FAQ、schema、tags、CTA、chartData。
+- `POST /api/generate-article-assets`
+  - 輸出：封面圖 prompt、段落插圖 prompt、工具比較圖、流程圖、雷達圖、商業矩陣圖與 infographic data。
+- `POST /api/publish-daily-articles`
+  - Header：`x-content-factory-key: CONTENT_FACTORY_API_KEY`
+  - 功能：每天批次產生最多 5 篇文章，寫入 `data/articles/*.json` 與 `data/articles/*.mdx`，再 git add、commit、push。
+
+每日 n8n workflow：
+
+```text
+workflows/n8n-ai-daily-content-factory.json
+```
+
+排程：
+
+- 05:30 搜尋熱門 AI 話題
+- 05:40 生成 5 篇 SEO 文章與素材
+- 05:50 發布文章、GitHub Push、觸發 Zeabur
+- 06:10 發 Facebook、Threads、LINE OA
+
+Zeabur 環境變數需至少設定：
+
+- `NEXT_PUBLIC_SITE_URL`
+- `OPENAI_API_KEY`
+- `CONTENT_FACTORY_API_KEY`
+- `PERPLEXITY_API_KEY`
+- `TAVILY_API_KEY`
+- `LINE_OA_PUSH_ENDPOINT`
+- `LINE_OA_CHANNEL_ACCESS_TOKEN`
+- `FACEBOOK_WEBHOOK_URL`
+- `THREADS_WEBHOOK_URL`
