@@ -138,6 +138,7 @@ workflows/n8n-ai-daily-content-factory.json
 - `POST /api/publish-daily-articles`
   - Header：`x-content-factory-key: CONTENT_FACTORY_API_KEY`
   - 功能：每天批次產生最多 5 篇文章，寫入 `data/articles/*.json` 與 `data/articles/*.mdx`，再 git add、commit、push。
+  - 發布成功後會寄送文章連結到 `DAILY_ARTICLE_EMAIL_TO`，預設 `1851662858@qq.com`。
 
 每日 n8n workflow：
 
@@ -150,6 +151,7 @@ workflows/n8n-ai-daily-content-factory.json
 - 05:30 搜尋熱門 AI 話題
 - 05:40 生成 5 篇 SEO 文章與素材
 - 05:50 發布文章、GitHub Push、觸發 Zeabur
+- 05:50 發布成功後寄送文章連結到信箱
 - 06:10 發 Facebook、Threads、LINE OA
 
 Zeabur 環境變數需至少設定：
@@ -163,3 +165,26 @@ Zeabur 環境變數需至少設定：
 - `LINE_OA_CHANNEL_ACCESS_TOKEN`
 - `FACEBOOK_WEBHOOK_URL`
 - `THREADS_WEBHOOK_URL`
+- `RESEND_API_KEY`
+- `EMAIL_FROM`
+- `DAILY_ARTICLE_EMAIL_TO`
+
+### 每日文章 Email 通知
+
+每日文章發布 API 會在文章寫入與 GitHub Push 後，自動寄出文章連結。
+
+預設收件人：
+
+```text
+1851662858@qq.com
+```
+
+寄信使用 Resend API，不需要額外 npm 套件。Zeabur 需設定：
+
+```text
+RESEND_API_KEY=re_xxx
+EMAIL_FROM=AI 一人公司研究所 <你的已驗證寄件網域>
+DAILY_ARTICLE_EMAIL_TO=1851662858@qq.com
+```
+
+若未設定 `RESEND_API_KEY`，文章發布流程仍會成功，API 回傳的 `email.skipped` 會是 `true`。

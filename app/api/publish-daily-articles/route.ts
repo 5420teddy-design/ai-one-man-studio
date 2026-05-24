@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { generateDailyArticle, getTrendingTopics, type TrendingTopic } from "@/lib/daily-content-factory";
+import { sendDailyArticleEmail } from "@/lib/email-notifier";
 import { getAutomationSecretError, runGitPublish, saveGeneratedArticle, type GeneratedArticle } from "@/lib/content-factory";
 
 export const runtime = "nodejs";
@@ -22,6 +23,7 @@ export async function POST(request: Request) {
   const articles = body.articles?.length ? body.articles.slice(0, limit) : await Promise.all(topics.map((topic) => generateDailyArticle(topic)));
   const saved = await Promise.all(articles.map((article) => saveGeneratedArticle(article)));
   const git = body.commit === false ? [] : await runGitPublish(`Publish ${articles.length} daily AI articles`);
+  const email = await sendDailyArticleEmail(articles);
 
   return NextResponse.json({
     count: articles.length,
@@ -33,6 +35,7 @@ export async function POST(request: Request) {
     })),
     saved,
     git,
+    email,
     sitemap: "Sitemap is generated dynamically from data/articles on the next build.",
     deployedBy: "GitHub push triggers Zeabur deployment when repository auto-deploy is enabled."
   });

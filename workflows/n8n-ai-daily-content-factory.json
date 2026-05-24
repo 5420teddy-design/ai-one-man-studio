@@ -159,7 +159,7 @@
         "options": {}
       },
       "id": "publish",
-      "name": "05:50 存 MDX / GitHub Push / Zeabur 部署",
+      "name": "05:50 存 MDX / GitHub Push / Zeabur 部署 / Email 通知",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [840, 0]
