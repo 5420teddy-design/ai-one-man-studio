@@ -279,7 +279,55 @@ function buildArticles(): Article[] {
   );
 }
 
-export const articles: Article[] = buildArticles();
+const dailyStaticArticles: Article[] = [
+  {
+    id: 2026052701,
+    title: "ChatGPT Agent 工作流怎麼做？一人公司每日自動化實戰",
+    slug: "chatgpt-agent-workflow-solo-company-2026-05-27",
+    category: "AI自動化",
+    targetKeyword: "ChatGPT Agent 工作流",
+    searchIntent: "讀者想知道如何把 ChatGPT Agent 用在一人公司日常工作，包含任務拆解、工具串接、成本控管與可收費服務包裝。",
+    description: "用一人公司角度拆解 ChatGPT Agent 工作流，從每日例行任務、資料整理、內容產出到客戶回覆，整理可落地的自動化流程。",
+    outline: [
+      "先挑每天重複發生的工作",
+      "把 Agent 工作流拆成輸入、判斷、輸出與回報",
+      "用檢查清單降低自動化失誤",
+      "適合一人公司的三種服務包裝",
+      "每天更新與回報的營運節奏"
+    ],
+    chartType: "matrix",
+    chartData: [
+      { name: "內容產出", difficulty: 42, speed: 86, cost: 34, longTerm: 88 },
+      { name: "客戶回覆", difficulty: 58, speed: 78, cost: 40, longTerm: 84 },
+      { name: "資料整理", difficulty: 46, speed: 82, cost: 30, longTerm: 80 },
+      { name: "專案監控", difficulty: 64, speed: 70, cost: 38, longTerm: 92 }
+    ],
+    monetizationAngle: "這類工作流可以包裝成每月維護服務，例如內容網站每日更新、LINE 客服摘要、客戶名單整理與自動寄信報告，適合一人公司用固定月費累積穩定收入。",
+    publishDate: "2026-05-27",
+    readingTime: 8,
+    coverImage: "/images/ai-cover-default.svg",
+    author: "AI 一人公司研究所",
+    shares: 168,
+    featured: true,
+    tags: ["ChatGPT Agent 工作流", "AI自動化", "一人公司", "每日內容工廠"],
+    faq: [
+      {
+        question: "ChatGPT Agent 工作流一定要寫程式嗎？",
+        answer: "不一定。可以先用表單、試算表、n8n 或現成自動化工具串接，等流程穩定後再用程式客製。"
+      },
+      {
+        question: "一人公司最適合先自動化哪一件事？",
+        answer: "優先挑每天都會重複、結果容易檢查、失敗風險可控的工作，例如文章檢查、客戶訊息分類或每日報告。"
+      },
+      {
+        question: "自動化內容發布需要人工審稿嗎？",
+        answer: "建議保留檢查步驟，至少確認標題、日期、連結、SEO 欄位與寄信報告都正確，再讓流程逐步提高自動化程度。"
+      }
+    ]
+  }
+];
+
+export const articles: Article[] = [...dailyStaticArticles, ...buildArticles()];
 
 export function getArticleBySlug(slug: string) {
   return articles.find((article) => article.slug === slug);
