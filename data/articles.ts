@@ -1,4 +1,4 @@
-import type { CategoryName } from "./categories";
+﻿import type { CategoryName } from "./categories";
 
 export type ChartType = "bar" | "radar" | "matrix";
 
@@ -280,6 +280,100 @@ function buildArticles(): Article[] {
 }
 
 const dailyStaticArticles: Article[] = [
+  {
+    id: 2026053101,
+    title: "AI 每日營運自動化怎麼做？2026-05-31 內容更新、部署與通知流程",
+    slug: "ai-daily-operations-automation-2026-05-31",
+    category: "AI自動化",
+    targetKeyword: "AI 每日營運自動化",
+    searchIntent: "讀者想知道如何把每日內容更新、部署驗證與郵件通知串成一套可持續執行的營運流程。",
+    description: "用一人公司角度拆解每日營運自動化，包含內容更新、建置檢查、正式部署、線上驗證與郵件通知。",
+    outline: [
+      "每天先確認是否已有今日內容",
+      "新增靜態文章要能被正式站打包",
+      "部署後必須檢查正式網址",
+      "郵件報告要列出成功與失敗原因",
+      "把流程固定成可維護的營運節奏"
+    ],
+    chartType: "matrix",
+    chartData: [
+      { name: "內容更新", difficulty: 42, speed: 82, cost: 30, longTerm: 88 },
+      { name: "建置檢查", difficulty: 48, speed: 74, cost: 28, longTerm: 86 },
+      { name: "正式部署", difficulty: 58, speed: 70, cost: 36, longTerm: 92 },
+      { name: "郵件通知", difficulty: 36, speed: 88, cost: 24, longTerm: 84 }
+    ],
+    monetizationAngle: "每日營運自動化可以包裝成內容網站維護月費，替客戶處理文章更新、部署驗證、錯誤回報與成效追蹤。",
+    publishDate: "2026-05-31",
+    readingTime: 7,
+    coverImage: "/images/ai-cover-default.svg",
+    author: "AI 一人公司研究所",
+    shares: 160,
+    featured: true,
+    tags: ["AI 每日營運", "自動化", "內容網站", "部署通知"],
+    faq: [
+      {
+        question: "每日營運自動化最重要的是什麼？",
+        answer: "最重要的是可驗證。文章是否存在、建置是否通過、正式網址是否可打開、郵件是否送出，都要有明確結果。"
+      },
+      {
+        question: "為什麼不能只看本機建置成功？",
+        answer: "本機成功不代表正式站已更新。必須等部署完成，再讀取正式網址確認 HTTP 200 且頁面包含文章標題。"
+      },
+      {
+        question: "這套流程適合哪些客戶？",
+        answer: "適合需要每天更新內容、累積 SEO、追蹤部署狀態並收到固定報告的小型公司、顧問與內容網站經營者。"
+      }
+    ]
+  },  {
+    id: 2026053101,
+    title: "AI SEO 文章更新系統：一人公司如何每天穩定發布與改寫",
+    slug: "ai-seo-content-refresh-system-2026-05-31",
+    category: "AI SEO",
+    targetKeyword: "AI SEO 文章更新系統",
+    searchIntent: "想用固定節奏經營內容站的一人公司，正在找可每天穩定發布、補強舊文與串接內部連結的 AI SEO 文章流程。",
+    description:
+      "這篇整理一套適合一人公司的 AI SEO 文章更新系統，從題目池、發布節奏、內鏈補強到成效回看，幫你把內容站做成可持續累積流量的結構。",
+    outline: [
+      "先建立題目池，避免每天臨時想題目導致產能不穩",
+      "把新文章、舊文改寫與內部連結補強排進同一個日更流程",
+      "用固定欄位管理標題、摘要、FAQ 與目標關鍵字，降低出錯機率",
+      "發布後追蹤收錄、點擊與轉換訊號，決定下一輪該放大哪個主題",
+      "把內容更新流程文件化，之後才能交給自動化或外包協作"
+    ],
+    chartType: "matrix",
+    chartData: [
+      { name: "新文章發布", difficulty: 42, speed: 84, cost: 26, longTerm: 88 },
+      { name: "舊文改寫", difficulty: 36, speed: 80, cost: 22, longTerm: 92 },
+      { name: "內鏈補強", difficulty: 28, speed: 78, cost: 18, longTerm: 90 },
+      { name: "成效回看", difficulty: 34, speed: 66, cost: 20, longTerm: 86 }
+    ],
+    monetizationAngle:
+      "當內容站能穩定發布與回收舊文流量後，就能把自然流量導向顧問服務、教學產品、工具推薦與名單蒐集頁，讓 SEO 不只帶來閱讀量，而是直接支援一人公司的營收模型。",
+    publishDate: "2026-05-31",
+    readingTime: 7,
+    coverImage: "/images/ai-cover-default.svg",
+    author: "AI 一人公司研究所",
+    shares: 182,
+    featured: true,
+    tags: ["AI SEO", "內容更新", "一人公司", "流量成長"],
+    faq: [
+      {
+        question: "AI SEO 文章更新系統和單純日更有什麼不同？",
+        answer:
+          "差別在於它不只追求新增篇數，而是把舊文改寫、內部連結與關鍵字布局一起管理。這樣內容站的流量會更穩，收錄後的成效也比較容易持續放大。"
+      },
+      {
+        question: "一人公司每天更新文章會不會太耗時間？",
+        answer:
+          "如果題目池、欄位模板與 FAQ 結構都先固定，實際每天要處理的只是選題、填內容與檢查連結。比起每次從零開始寫，耗時會明顯下降。"
+      },
+      {
+        question: "這套流程最先該優化哪個環節？",
+        answer:
+          "通常先優化題目池與內鏈策略最有效，因為它們會直接影響發布穩定度與舊文流量回收。等節奏穩定後，再把成效追蹤與自動化補上。"
+      }
+    ]
+  },
   {
     id: 2026052801,
     title: "AI 客服自動化怎麼落地？一人公司 LINE 回覆與名單整理流程",
